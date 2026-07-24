@@ -47,8 +47,8 @@ ARCH            ?= $(HOSTARCH)
 # Pointer to SBAT .csv file. First is default; uncomment second (or make your
 # your own) if you build your own binary. If you make changes and build your
 # own binary, creating your own file is the best practice.
-REFIND_SBAT_CSV = refind-sbat.csv
-#REFIND_SBAT_CSV = refind-sbat-local.csv
+REFIND_SBAT_CSV = ploader-sbat.csv
+#REFIND_SBAT_CSV = ploader-sbat-local.csv
 
 # Note: TIANOBASE is defined in master Makefile and exported
 GENFW           = $(TIANOBASE)/BaseTools/Source/C/bin/GenFw
@@ -83,7 +83,7 @@ OPTIMFLAGS      = -Os -fno-strict-aliasing -fno-tree-loop-distribute-patterns
 CFLAGS          = $(OPTIMFLAGS) -fno-stack-protector -fshort-wchar -Wall
 
 # ...for GNU-EFI....
-GNUEFI_CFLAGS   = -fpic -I$(EFIINC) -I$(EFIINC)/$(ARCH) -I$(EFIINC)/protocol -I../include -I../refind -I../libeg -I../mok -I../gzip
+GNUEFI_CFLAGS   = -fpic -I$(EFIINC) -I$(EFIINC)/$(ARCH) -I$(EFIINC)/protocol -I../include -I../ploader -I../libeg -I../mok -I../gzip
 
 # ...and for TianoCore....
 TIANO_INCLUDE_DIRS = -I $(TIANOBASE)/MdePkg \
@@ -93,7 +93,7 @@ TIANO_INCLUDE_DIRS = -I $(TIANOBASE)/MdePkg \
                      -I $(TIANOBASE)/IntelFrameworkPkg/Include \
                      -I $(TIANOBASE)/MdePkg/Include/$(ARCHDIR) \
                      -I .. \
-                     -I ../refind \
+                     -I ../ploader \
                      -I ../libeg \
                      -I ../gzip \
                      -I ../include \
@@ -212,6 +212,6 @@ endif
 # utility rules
 
 #clean:
-#	rm -f $(TARGET) *~ *.so $(OBJS) *.efi *.obj refind_*.txt refind_*.dll *.lib
+#	rm -f $(TARGET) *~ *.so $(OBJS) *.efi *.obj ploader_*.txt ploader_*.dll *.lib
 
 # EOF

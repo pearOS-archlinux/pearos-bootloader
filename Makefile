@@ -8,7 +8,7 @@
 include Make.common
 
 SHELL=/bin/bash
-LOADER_DIR=refind
+LOADER_DIR=ploader
 FS_DIR=filesystems
 LIBEG_DIR=libeg
 MOK_DIR=mok
@@ -113,7 +113,7 @@ tiano:
 	+make MAKEWITH=TIANO AR_TARGET=libeg -C $(LIBEG_DIR) -f Make.tiano
 	+make MAKEWITH=TIANO AR_TARGET=mok -C $(MOK_DIR) -f Make.tiano
 	+make MAKEWITH=TIANO AR_TARGET=gzip -C $(GZIP_DIR) -f Make.tiano
-	+make MAKEWITH=TIANO BUILDME=refind DLL_TARGET=refind -C $(LOADER_DIR) -f Make.tiano
+	+make MAKEWITH=TIANO BUILDME=ploader DLL_TARGET=ploader -C $(LOADER_DIR) -f Make.tiano
 ifneq ($(ARCH),aarch64)
 	+make MAKEWITH=TIANO -C $(GPTSYNC_DIR) -f Make.tiano
 endif
@@ -147,17 +147,17 @@ fs_tiano:
 # Build process for TianoCore using TianoCore-standard build process rather
 # than my own custom Makefiles (except this top-level one)
 edk2: build_edk2
-	cp $(EDK2_BUILDLOC)/refind.efi ./refind/ploader_$(FILENAME_CODE).efi
+	cp $(EDK2_BUILDLOC)/refind.efi ./ploader/ploader_$(FILENAME_CODE).efi
 	cp $(EDK2_BUILDLOC)/gptsync.efi ./gptsync/gptsync_$(FILENAME_CODE).efi
 ifneq ($(OMIT_SBAT), 1)
 	$(OBJCOPY) --set-section-alignment '.sbat=512' --add-section .sbat=$(REFIND_SBAT_CSV) \
-		--adjust-section-vma .sbat+10000000 ./refind/ploader_$(FILENAME_CODE).efi
+		--adjust-section-vma .sbat+10000000 ./ploader/ploader_$(FILENAME_CODE).efi
 	$(OBJCOPY) --set-section-alignment '.sbat=512' --add-section .sbat=$(REFIND_SBAT_CSV) \
 		--adjust-section-vma .sbat+10000000 ./gptsync/gptsync_$(FILENAME_CODE).efi
 endif
 
 all_edk2: build_edk2 fs_edk2
-	cp $(EDK2_BUILDLOC)/refind.efi ./refind/ploader_$(FILENAME_CODE).efi
+	cp $(EDK2_BUILDLOC)/refind.efi ./ploader/ploader_$(FILENAME_CODE).efi
 	cp $(EDK2_BUILDLOC)/gptsync.efi ./gptsync/gptsync_$(FILENAME_CODE).efi
 
 gptsync_edk2: build_edk2
@@ -207,18 +207,5 @@ clean:
 	rm -rf $(EDK2BASE)/Build/Refind
 	rm -rf drivers_$(FILENAME_CODE)/*
 	[ ! -L $(EDK2BASE)/RefindPkg ] || rm -v $(EDK2BASE)/RefindPkg
-
-# NOTE TO DISTRIBUTION MAINTAINERS:
-# The "install" target installs the program directly to the ESP
-# and it modifies the *CURRENT COMPUTER's* NVRAM. Thus, you should
-# *NOT* use this target as part of the build process for your
-# binary packages (RPMs, Debian packages, etc.). (Gentoo could
-# use it in an ebuild, though....) You COULD, however, copy the
-# files to a directory somewhere (/usr/share/refind or whatever)
-# and then call refind-install as part of the binary package
-# installation process.
-
-install:
-	./refind-install
 
 # DO NOT DELETE

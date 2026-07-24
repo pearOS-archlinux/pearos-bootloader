@@ -56,9 +56,9 @@
  */
 
 #include "libegint.h"
-#include "../refind/screen.h"
-#include "../refind/lib.h"
-#include "../refind/mystrings.h"
+#include "../ploader/screen.h"
+#include "../ploader/lib.h"
+#include "../ploader/mystrings.h"
 #include "../include/refit_call_wrapper.h"
 #include "libeg.h"
 #include "log.h"

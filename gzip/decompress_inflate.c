@@ -6,9 +6,9 @@
  * 
  */
 
-#include "../refind/lib.h"
+#include "../ploader/lib.h"
 #include "../libeg/lodepng.h"
-#include "../refind/log.h"
+#include "../ploader/log.h"
 
 #define malloc AllocatePool
 #define free MyFreePool
