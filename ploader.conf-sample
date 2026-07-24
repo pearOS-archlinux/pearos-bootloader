@@ -1,7 +1,15 @@
 #
-# refind.conf
-# Configuration file for the rEFInd boot menu
+# ploader.conf
+# Configuration file for pearOS's Ploader boot menu (fork of rEFInd)
 #
+
+# pearOS: controls whether the boot menu is shown by default.
+#   true  (default) -- boot silently into the first detected OS unless a
+#                       boot-mode key combo (Alt+M for the menu, or one of
+#                       the recovery/hardware-test combos) is held.
+#   false            -- always show the interactive menu, like stock rEFInd;
+#                       boot-mode key combos are not checked in this mode.
+#silent_menu true
 
 # Timeout in seconds for the main menu screen. Setting the timeout to 0
 # disables automatic booting (i.e., no timeout). Setting it to -1 causes

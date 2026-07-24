@@ -350,6 +350,7 @@ typedef struct {
    BOOLEAN          Install;
    BOOLEAN          WriteSystemdVars;
    BOOLEAN          FollowSymlinks;
+   BOOLEAN          SilentMenu; // pearOS: if TRUE (default), boot silently unless a boot-mode key combo is held; if FALSE, always show the menu.
    BOOLEAN          GzippedLoaders;
    UINTN            RequestedScreenWidth;
    UINTN            RequestedScreenHeight;

@@ -104,6 +104,7 @@ REFIT_CONFIG GlobalConfig = { /* TextOnly = */ FALSE,
                               /* Install = */ FALSE,
                               /* WriteSystemdVars = */ FALSE,
                               /* FollowSymlinks = */ FALSE,
+                              /* SilentMenu = */ TRUE,
 #ifdef EFIAARCH64
                               /* GzippedLoaders = */ TRUE,
 #else
@@ -825,7 +826,8 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
     // boot straight into the first detected OS, with no rEFInd screen shown at all.
     // Hold Alt+M during boot to see the picker instead (macOS-style boot option keys),
     // or one of the recovery/hardware-test combos to jump straight to that partition.
-    {
+    // Set "silent_menu false" in ploader.conf to disable this and always show the menu.
+    if (GlobalConfig.SilentMenu) {
         PEAROS_BOOT_MODE BootMode = DetectBootMode();
         LOADER_ENTRY *SpecialEntry = NULL;
 

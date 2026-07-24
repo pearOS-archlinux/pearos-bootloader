@@ -23,6 +23,8 @@ Partition labels are capped at 11 characters (FAT volume label limit), hence the
 
 If a key combo is held but no partition with the matching label is found, boot falls through to the normal interactive picker instead of failing silently.
 
+Set `silent_menu false` in `ploader.conf` to disable all of the above and always show the interactive menu (stock rEFInd behavior); boot-mode key combos aren't checked in that mode. Defaults to `true`.
+
 ## Other pearOS customizations
 
 - **Hardcoded theme** — icons, background, selection art, and font are baked into the `theme/` directory and loaded unconditionally; `ploader.conf` directives that would normally control these (`icons_dir`, `banner`, `selection_big`/`selection_small`, `hideui`, `showtools`, `font`) are ignored.

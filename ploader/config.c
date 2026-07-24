@@ -733,6 +733,11 @@ VOID ReadConfig(CHAR16 *FileName)
         } else if (MyStriCmp(TokenList[0], L"font") && (TokenCount == 2)) {
             // pearOS: theme is hardcoded (pear-bootloader theme); ignore user overrides.
 
+        } else if (MyStriCmp(TokenList[0], L"silent_menu")) {
+            // pearOS: TRUE (default) = boot silently unless a boot-mode key combo is
+            // held; FALSE = always show the menu (no silent/seamless boot at all).
+            GlobalConfig.SilentMenu = HandleBoolean(TokenList, TokenCount);
+
         } else if (MyStriCmp(TokenList[0], L"scan_all_linux_kernels")) {
             GlobalConfig.ScanAllLinux = HandleBoolean(TokenList, TokenCount);
 
