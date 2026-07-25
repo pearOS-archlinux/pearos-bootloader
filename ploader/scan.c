@@ -518,10 +518,17 @@ VOID SetLoaderDefaults(LOADER_ENTRY *Entry, CHAR16 *LoaderPath, REFIT_VOLUME *Vo
     // detect specific loaders
     if (IsInSubstring(NameClues, GlobalConfig.LinuxPrefixes)) {
         if (Volume->DiskKind != DISK_KIND_NET) {
-            GuessLinuxDistribution(&OSIconName, Volume, LoaderPath);
             Entry->LoadOptions = GetMainLinuxOptions(LoaderPath, Volume);
         }
-        MergeStrings(&OSIconName, L"linux", L',');
+        // pearOS: this bootloader only ever scans its own live-ISO kernel, so
+        // hardcode the label and icon hint instead of running distro-guessing
+        // and generic "linux" fallback logic meant for a general-purpose picker.
+        MyFreePool(Entry->me.Title);
+        Entry->me.Title = StrDuplicate(L"Install pearOS NiceC0re");
+        MyFreePool(Entry->Title);
+        Entry->Title = StrDuplicate(L"Install pearOS NiceC0re");
+        MyFreePool(OSIconName);
+        OSIconName = StrDuplicate(L"pearos");
         Entry->OSType = 'L';
         if (ShortcutLetter == 0)
             ShortcutLetter = 'L';
