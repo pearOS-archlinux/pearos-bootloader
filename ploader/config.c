@@ -71,7 +71,7 @@
 
 // constants
 
-#define LINUX_OPTIONS_FILENAMES  L"refind_linux.conf,refind-linux.conf"
+#define LINUX_OPTIONS_FILENAMES  L"ploader_linux.conf"
 #define MAXCONFIGFILESIZE        (128*1024)
 
 #define ENCODING_ISO8859_1  (0)
@@ -1184,7 +1184,7 @@ REFIT_FILE * ReadLinuxOptionsFile(IN CHAR16 *LoaderPath, IN REFIT_VOLUME *Volume
         OptionsFilename = FullFilename = NULL;
     } while (GoOn);
     if (!FileFound) {
-        // No refind_linux.conf file; look for /etc/fstab and try to pull values from there....
+        // No ploader_linux.conf file; look for /etc/fstab and try to pull values from there....
         File = GenerateOptionsFromEtcFstab(Volume);
         // If still no joy, try to use Freedesktop.org Discoverable Partitions Spec....
         if (!File)

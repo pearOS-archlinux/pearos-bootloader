@@ -151,7 +151,7 @@ CHAR16 * FindInitrd(IN CHAR16 *LoaderPath, IN REFIT_VOLUME *Volume) {
 
 // Adds InitrdPath to Options, but only if Options doesn't already include an
 // initrd= line or a `%v` variable. Done to enable overriding the default initrd
-// selection in a refind_linux.conf file's options list.
+// selection in a ploader_linux.conf file's options list.
 // If a `%v` substring/variable is found in Options, it is replaced with the
 // initrd version string. This is available to allow for more complex customization
 // of initrd options.
