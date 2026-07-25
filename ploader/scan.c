@@ -518,17 +518,27 @@ VOID SetLoaderDefaults(LOADER_ENTRY *Entry, CHAR16 *LoaderPath, REFIT_VOLUME *Vo
     // detect specific loaders
     if (IsInSubstring(NameClues, GlobalConfig.LinuxPrefixes)) {
         if (Volume->DiskKind != DISK_KIND_NET) {
+            GuessLinuxDistribution(&OSIconName, Volume, LoaderPath);
             Entry->LoadOptions = GetMainLinuxOptions(LoaderPath, Volume);
         }
-        // pearOS: this bootloader only ever scans its own live-ISO kernel, so
-        // hardcode the label and icon hint instead of running distro-guessing
-        // and generic "linux" fallback logic meant for a general-purpose picker.
-        MyFreePool(Entry->me.Title);
-        Entry->me.Title = StrDuplicate(L"Install pearOS NiceC0re");
-        MyFreePool(Entry->Title);
-        Entry->Title = StrDuplicate(L"Install pearOS NiceC0re");
-        MyFreePool(OSIconName);
-        OSIconName = StrDuplicate(L"pearos");
+        MergeStrings(&OSIconName, L"linux", L',');
+        // pearOS: only relabel as "Install pearOS NiceC0re" if this kernel
+        // actually ships a ploader_linux.conf next to it -- that file only
+        // exists on our own live-ISO kernel, so a dual-booted distro's real
+        // kernel (matched by the same vmlinuz/bzImage/kernel prefix check)
+        // still gets its normal generic label and icon.
+        if (Volume->DiskKind != DISK_KIND_NET) {
+            CHAR16 *PearOSConfPath = PoolPrint(L"%s\\ploader_linux.conf", PathOnly);
+            if (FileExists(Volume->RootDir, PearOSConfPath)) {
+                MyFreePool(Entry->me.Title);
+                Entry->me.Title = StrDuplicate(L"Install pearOS NiceC0re");
+                MyFreePool(Entry->Title);
+                Entry->Title = StrDuplicate(L"Install pearOS NiceC0re");
+                MyFreePool(OSIconName);
+                OSIconName = StrDuplicate(L"pearos");
+            }
+            MyFreePool(PearOSConfPath);
+        }
         Entry->OSType = 'L';
         if (ShortcutLetter == 0)
             ShortcutLetter = 'L';
