@@ -119,6 +119,14 @@ use_nvram false
 #
 #banner_scale fillscreen
 
+# pearOS: title shown for the auto-detected entry for this system's own
+# kernel (the one with a ploader_linux.conf sitting next to it -- a
+# dual-booted distro's kernel is unaffected). Populated automatically at
+# install time from /etc/os-release (PRETTY_NAME + VERSION). Defaults to
+# "Install pearOS NiceC0re" if unset.
+#
+#label "pearOS NiceC0re 26.7"
+
 # Icon sizes. All icons are square, so just one value is specified. The
 # big icons are used for OS selectors in the first row and the small
 # icons are used for tools on the second row. Drive-type badges are 1/4

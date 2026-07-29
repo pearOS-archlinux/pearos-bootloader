@@ -649,6 +649,12 @@ VOID ReadConfig(CHAR16 *FileName)
         } else if (MyStriCmp(TokenList[0], L"banner")) {
             // pearOS: theme is hardcoded (pear-bootloader theme); ignore user overrides.
 
+        } else if (MyStriCmp(TokenList[0], L"label")) {
+            // pearOS: title shown for the auto-detected own-kernel entry
+            // (the one with a ploader_linux.conf next to it). Populated
+            // automatically at install time from /etc/os-release.
+            HandleString(TokenList, TokenCount, &(GlobalConfig.PearOSLabel));
+
         } else if (MyStriCmp(TokenList[0], L"banner_scale") && (TokenCount == 2)) {
             if (MyStriCmp(TokenList[1], L"noscale")) {
                 GlobalConfig.BannerScale = BANNER_NOSCALE;

@@ -370,6 +370,7 @@ typedef struct {
    REFIT_VOLUME     *DiscoveredRoot;
    EFI_DEVICE_PATH  *SelfDevicePath;
    CHAR16           *BannerFileName;
+   CHAR16           *PearOSLabel; // pearOS: title for the auto-detected own-kernel entry (see "label" in ploader.conf)
    EG_IMAGE         *ScreenBackground;
    CHAR16           *ConfigFilename;
    CHAR16           *SelectionSmallFileName;

@@ -4,7 +4,7 @@
 
 pkgname=pearos-bootloader
 pkgver=26.7
-pkgrel=5
+pkgrel=6
 pkgdesc="pearOS's Ploader boot manager (fork of rEFInd)"
 arch=('x86_64')
 url='https://github.com/pearOS-archlinux/pearos-bootloader'

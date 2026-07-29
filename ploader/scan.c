@@ -530,10 +530,12 @@ VOID SetLoaderDefaults(LOADER_ENTRY *Entry, CHAR16 *LoaderPath, REFIT_VOLUME *Vo
         if (Volume->DiskKind != DISK_KIND_NET) {
             CHAR16 *PearOSConfPath = PoolPrint(L"%s\\ploader_linux.conf", PathOnly);
             if (FileExists(Volume->RootDir, PearOSConfPath)) {
+                CHAR16 *Label = (GlobalConfig.PearOSLabel && GlobalConfig.PearOSLabel[0] != L'\0')
+                    ? GlobalConfig.PearOSLabel : L"Install pearOS NiceC0re";
                 MyFreePool(Entry->me.Title);
-                Entry->me.Title = StrDuplicate(L"Install pearOS NiceC0re");
+                Entry->me.Title = StrDuplicate(Label);
                 MyFreePool(Entry->Title);
-                Entry->Title = StrDuplicate(L"Install pearOS NiceC0re");
+                Entry->Title = StrDuplicate(Label);
                 MyFreePool(OSIconName);
                 OSIconName = StrDuplicate(L"pearos");
             }
