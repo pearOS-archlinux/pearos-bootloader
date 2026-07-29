@@ -4,7 +4,7 @@
 
 pkgname=pearos-bootloader
 pkgver=26.7
-pkgrel=1
+pkgrel=2
 _commit=ae38d2236579324c94fd17a8160f8d09906a7ad4
 pkgdesc="pearOS's Ploader boot manager (fork of rEFInd)"
 arch=('x86_64')
@@ -45,6 +45,12 @@ package() {
 	# hardcoded theme (icons, background, font, selection art) + boot chime
 	cp -r theme "$pkgdir/usr/share/$pkgname/theme"
 	install -Dm644 bootsound.wav "$pkgdir/usr/share/$pkgname/bootsound.wav"
+
+	# EFI filesystem drivers (btrfs, ext2/3/4, ntfs, xfs, ...) -- without
+	# these Ploader can only read the FAT32 ESP itself and finds no OS
+	# entries when /boot lives on a non-FAT root (e.g. Arch's default
+	# btrfs layout). See drivers_x64/README.md.
+	install -Dm644 drivers_x64/*.efi -t "$pkgdir/usr/share/$pkgname/drivers_x64/"
 
 	# install script (adapted from upstream refind-install)
 	install -Dm755 "$srcdir/ploader-install" "$pkgdir/usr/bin/ploader-install"
