@@ -66,6 +66,8 @@ EfiLibOpenRoot (
   EFI_STATUS                      Status;
   EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *Volume;
   EFI_FILE_HANDLE                 File;
+  EFI_DEVICE_PATH                 *DevicePath;
+  EFI_HANDLE                      FsHandle;
 
   File = NULL;
 
@@ -77,6 +79,38 @@ EfiLibOpenRoot (
                   &gEfiSimpleFileSystemProtocolGuid,
                   (VOID **) &Volume
                   );
+
+  if (EFI_ERROR (Status)) {
+    // pearOS: a filesystem driver that has just CONNECTED to this
+    // controller (e.g. efifs' btrfs_x64.efi, loaded via LoadDrivers() /
+    // ConnectAllDriversToAllControllers()) commonly exposes
+    // SimpleFileSystemProtocol on a new CHILD handle rather than
+    // installing it directly on DeviceHandle. Walk the device path to
+    // find that child handle instead of giving up -- without this,
+    // ScanVolume()/ScanEfiFiles() treat the volume as unreadable even
+    // though the driver loaded successfully and identified the fs type.
+    DevicePath = NULL;
+    Status = refit_call3_wrapper(gBS->HandleProtocol,
+                    DeviceHandle,
+                    &gEfiDevicePathProtocolGuid,
+                    (VOID **) &DevicePath
+                    );
+    if (!EFI_ERROR (Status) && DevicePath != NULL) {
+      FsHandle = NULL;
+      Status = refit_call3_wrapper(gBS->LocateDevicePath,
+                      &gEfiSimpleFileSystemProtocolGuid,
+                      &DevicePath,
+                      &FsHandle
+                      );
+      if (!EFI_ERROR (Status) && FsHandle != NULL) {
+        Status = refit_call3_wrapper(gBS->HandleProtocol,
+                        FsHandle,
+                        &gEfiSimpleFileSystemProtocolGuid,
+                        (VOID **) &Volume
+                        );
+      }
+    }
+  }
 
   //
   // Open the root directory of the volume

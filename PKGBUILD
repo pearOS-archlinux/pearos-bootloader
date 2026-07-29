@@ -4,7 +4,7 @@
 
 pkgname=pearos-bootloader
 pkgver=26.7
-pkgrel=3
+pkgrel=5
 pkgdesc="pearOS's Ploader boot manager (fork of rEFInd)"
 arch=('x86_64')
 url='https://github.com/pearOS-archlinux/pearos-bootloader'
@@ -21,8 +21,9 @@ optdepends=('gptfdisk: for finding non-vfat ESP with ploader-install'
 # won't re-clone otherwise).
 source=("git+$url.git"
         "ploader-install"
-        "ploader-mkrlconf")
-sha256sums=('SKIP' 'SKIP' 'SKIP')
+        "ploader-mkrlconf"
+        "ploader-sync-kernel")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 # NOTE: unlike the official Arch 'refind' PKGBUILD, no gnu-efi-4.x /
 # --output-target compat patches are needed here — this fork already
@@ -62,6 +63,7 @@ package() {
 	# install scripts (adapted from upstream refind-install / mkrlconf)
 	install -Dm755 "$srcdir/ploader-install" "$pkgdir/usr/bin/ploader-install"
 	install -Dm755 "$srcdir/ploader-mkrlconf" "$pkgdir/usr/bin/ploader-mkrlconf"
+	install -Dm755 "$srcdir/ploader-sync-kernel" "$pkgdir/usr/bin/ploader-sync-kernel"
 
 	# docs + license
 	install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"

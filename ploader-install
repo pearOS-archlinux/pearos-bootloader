@@ -632,9 +632,9 @@ CopyDrivers() {
       SetBootFS
       DriverType=""
       case $BootFS in
-         ext2 | ext3 | ext4) DriverType="ext2"
-              # efifs ships a single ext2/3/4-capable driver as ext2_x64.efi;
-              # there's no separate ext4_x64.efi to point ext4 at.
+         ext2 | ext3) DriverType="ext2"
+              ;;
+         ext4) DriverType="ext4"
               ;;
          reiserfs) DriverType="reiserfs"
               ;;

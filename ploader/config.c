@@ -1165,7 +1165,10 @@ REFIT_FILE * ReadLinuxOptionsFile(IN CHAR16 *LoaderPath, IN REFIT_VOLUME *Volume
         FullFilename = FindPath(LoaderPath);
         if ((OptionsFilename != NULL) && (FullFilename != NULL)) {
             MergeStrings(&FullFilename, OptionsFilename, '\\');
+            LOG(1, LOG_LINE_NORMAL, L"Checking for Linux options file '%s' on volume '%s' (RootDir %s NULL)",
+                FullFilename, Volume->VolName, Volume->RootDir == NULL ? L"IS" : L"is not");
             if (FileExists(Volume->RootDir, FullFilename)) {
+                LOG(1, LOG_LINE_NORMAL, L"Found '%s'", FullFilename);
                 File = AllocateZeroPool(sizeof(REFIT_FILE));
                 Status = ReadFile(Volume->RootDir, FullFilename, File, &size);
                 if (CheckError(Status, L"while loading the Linux options file")) {
@@ -1175,6 +1178,8 @@ REFIT_FILE * ReadLinuxOptionsFile(IN CHAR16 *LoaderPath, IN REFIT_VOLUME *Volume
                     GoOn = FALSE;
                     FileFound = TRUE;
                 } // if/else error
+            } else {
+                LOG(1, LOG_LINE_NORMAL, L"'%s' not found", FullFilename);
             } // if file exists
         } else { // a filename string is NULL
             GoOn = FALSE;
