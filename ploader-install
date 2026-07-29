@@ -135,10 +135,13 @@ EspGuid="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
 
 GetParams() {
    InstallToEspOnMac=1
-   # Install the driver required to read Linux /boot, if it's available
-   # Note: Under OS X, this will be installed only if a Linux partition
-   # is detected, in which case the ext4fs driver will be installed.
-   InstallDrivers="boot"
+   # pearOS: default to installing every bundled filesystem driver, not just
+   # the one auto-detected for our own /boot. "boot" mode only covers this
+   # system's own root fs; Ploader also scans OTHER attached volumes (a
+   # second internal drive, an external HDD) looking for other OSes to
+   # boot, and those can be on any filesystem efifs supports (NTFS, exFAT,
+   # XFS, ...). Pass --nodrivers to skip driver installation entirely.
+   InstallDrivers="all"
    while [[ $# -gt 0 ]]; do
       case $1 in
          --notesp) InstallToEspOnMac=0
@@ -626,11 +629,9 @@ CopyDrivers() {
       SetBootFS
       DriverType=""
       case $BootFS in
-         ext2 | ext3) DriverType="ext2"
-              # Could use ext4, but that can create unwanted entries from symbolic
-              # links in / to /boot/vmlinuz if a separate /boot partition is used.
-              ;;
-         ext4) DriverType="ext4"
+         ext2 | ext3 | ext4) DriverType="ext2"
+              # efifs ships a single ext2/3/4-capable driver as ext2_x64.efi;
+              # there's no separate ext4_x64.efi to point ext4 at.
               ;;
          reiserfs) DriverType="reiserfs"
               ;;
@@ -639,6 +640,14 @@ CopyDrivers() {
          hfsplus) DriverType="hfs"
               ;;
          ntfs) DriverType="ntfs"
+              ;;
+         xfs) DriverType="xfs"
+              ;;
+         f2fs) DriverType="f2fs"
+              ;;
+         exfat) DriverType="exfat"
+              ;;
+         jfs) DriverType="jfs"
               ;;
          *) BootFS=""
       esac
