@@ -201,11 +201,18 @@ clean:
 	make -C $(GZIP_DIR) clean
 	make -C $(LOADER_DIR) clean
 	make -C $(EFILIB_DIR) clean
-	make -C $(FS_DIR) clean
+	[ ! -d $(FS_DIR) ] || make -C $(FS_DIR) clean
 	make -C $(GPTSYNC_DIR) clean
 	rm -f include/*~
 	rm -rf $(EDK2BASE)/Build/Refind
 	rm -rf drivers_$(FILENAME_CODE)/*
 	[ ! -L $(EDK2BASE)/RefindPkg ] || rm -v $(EDK2BASE)/RefindPkg
+	rm -rf pkg src *.pkg.tar.* *.log
+
+# Builds the Arch package via makepkg (reads ./PKGBUILD). Separate from
+# "all" on purpose: "all" is what makepkg's own build() step calls
+# internally, so folding "makepkg" into it would recurse forever.
+package pkg:
+	makepkg -f
 
 # DO NOT DELETE
