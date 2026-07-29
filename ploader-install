@@ -373,12 +373,18 @@ CheckForFiles() {
       exit 1
    fi
 
-   if [[ -d "$PloaderDir/icons" ]] ; then
-      IconsDir="$PloaderDir/icons"
-   elif [[ -d "$ThisDir/icons" ]] ; then
-      IconsDir="$ThisDir/icons"
+   # Unlike stock rEFInd, this fork bundles icons/background/font/selection
+   # art together under a single "theme" directory (see README: theme is
+   # hardcoded and loaded unconditionally), not a bare "icons" directory.
+   # IconsDir still just gets `cp -r`'d as-is to the ESP target dir below,
+   # so pointing it at "theme" reproduces the "theme/..." relative layout
+   # the compiled binary actually expects at runtime.
+   if [[ -d "$PloaderDir/theme" ]] ; then
+      IconsDir="$PloaderDir/theme"
+   elif [[ -d "$ThisDir/theme" ]] ; then
+      IconsDir="$ThisDir/theme"
    else
-      echo "The icons directory is missing! Aborting installation!"
+      echo "The theme directory is missing! Aborting installation!"
       exit 1
    fi
 
@@ -733,14 +739,15 @@ CopyPloaderFiles() {
    fi
    echo "Copied Ploader binary files"
    echo ""
-   if [[ -d "$InstallDir/$TargetDir/icons" ]] ; then
-      rm -rf "$InstallDir/$TargetDir/icons-backup" &> /dev/null
-      mv -f "$InstallDir/$TargetDir/icons" "$InstallDir/$TargetDir/icons-backup"
-      echo "Notice: Backed up existing icons directory as icons-backup."
+   if [[ -d "$InstallDir/$TargetDir/theme" ]] ; then
+      rm -rf "$InstallDir/$TargetDir/theme-backup" &> /dev/null
+      mv -f "$InstallDir/$TargetDir/theme" "$InstallDir/$TargetDir/theme-backup"
+      echo "Notice: Backed up existing theme directory as theme-backup."
    fi
    if ! cp -r "$IconsDir" "$InstallDir/$TargetDir" ; then
       Problems=1
    fi
+   cp -f "$PloaderDir/bootsound.wav" "$InstallDir/$TargetDir/" 2> /dev/null
    mkdir -p "$InstallDir/$TargetDir/keys"
    cp -rf "$ThisDir"/keys/*.[cd]er "$InstallDir/$TargetDir/keys/" 2> /dev/null
    cp -rf "$EtcKeysDir"/*.[cd]er "$InstallDir/$TargetDir/keys/" 2> /dev/null
