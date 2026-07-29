@@ -135,13 +135,16 @@ EspGuid="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
 
 GetParams() {
    InstallToEspOnMac=1
-   # pearOS: default to installing every bundled filesystem driver, not just
-   # the one auto-detected for our own /boot. "boot" mode only covers this
-   # system's own root fs; Ploader also scans OTHER attached volumes (a
-   # second internal drive, an external HDD) looking for other OSes to
-   # boot, and those can be on any filesystem efifs supports (NTFS, exFAT,
-   # XFS, ...). Pass --nodrivers to skip driver installation entirely.
-   InstallDrivers="all"
+   # Install the driver required to read Linux /boot, if it's available.
+   # NOTE: don't default this to "all" -- the script itself warns (further
+   # down) that installing every driver on an internal hard disk risks
+   # boot instability; "all" is meant for USB rescue-media installs only.
+   # "boot" auto-detects and installs just the one driver this system's own
+   # /boot actually needs (now covers ext2/3/4, btrfs, reiserfs, hfsplus,
+   # ntfs, xfs, f2fs, exfat, jfs -- see CopyDrivers() below). Pass
+   # --alldrivers explicitly (and accept the risk) for external-drive /
+   # other-OS scanning support.
+   InstallDrivers="boot"
    while [[ $# -gt 0 ]]; do
       case $1 in
          --notesp) InstallToEspOnMac=0

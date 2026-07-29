@@ -4,7 +4,7 @@
 
 pkgname=pearos-bootloader
 pkgver=26.7
-pkgrel=2
+pkgrel=3
 pkgdesc="pearOS's Ploader boot manager (fork of rEFInd)"
 arch=('x86_64')
 url='https://github.com/pearOS-archlinux/pearos-bootloader'
@@ -20,8 +20,9 @@ optdepends=('gptfdisk: for finding non-vfat ESP with ploader-install'
 # new build to actually pick up the latest commit (makepkg source caching
 # won't re-clone otherwise).
 source=("git+$url.git"
-        "ploader-install")
-sha256sums=('SKIP' 'SKIP')
+        "ploader-install"
+        "ploader-mkrlconf")
+sha256sums=('SKIP' 'SKIP' 'SKIP')
 
 # NOTE: unlike the official Arch 'refind' PKGBUILD, no gnu-efi-4.x /
 # --output-target compat patches are needed here — this fork already
@@ -58,8 +59,9 @@ package() {
 	# under drivers_x64/ at runtime, so that's the destination name here.
 	install -Dm644 efifs-drivers/*.efi -t "$pkgdir/usr/share/$pkgname/drivers_x64/"
 
-	# install script (adapted from upstream refind-install)
+	# install scripts (adapted from upstream refind-install / mkrlconf)
 	install -Dm755 "$srcdir/ploader-install" "$pkgdir/usr/bin/ploader-install"
+	install -Dm755 "$srcdir/ploader-mkrlconf" "$pkgdir/usr/bin/ploader-mkrlconf"
 
 	# docs + license
 	install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
