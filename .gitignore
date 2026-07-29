@@ -7,6 +7,10 @@
 *.lib
 *~
 
+# ...except the bundled EFI filesystem drivers, which are checked-in
+# binaries (from efifs), not build output.
+!efifs-drivers/*.efi
+
 # makepkg
 /pkg/
 /src/

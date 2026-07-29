@@ -5,18 +5,21 @@
 pkgname=pearos-bootloader
 pkgver=26.7
 pkgrel=2
-_commit=ae38d2236579324c94fd17a8160f8d09906a7ad4
 pkgdesc="pearOS's Ploader boot manager (fork of rEFInd)"
 arch=('x86_64')
 url='https://github.com/pearOS-archlinux/pearos-bootloader'
 license=('GPL3')
-makedepends=('bash' 'dosfstools' 'efibootmgr' 'gnu-efi')
+makedepends=('bash' 'dosfstools' 'efibootmgr' 'gnu-efi' 'git')
 depends=('bash' 'dosfstools' 'efibootmgr')
 optdepends=('gptfdisk: for finding non-vfat ESP with ploader-install'
             'openssl: for generating local certificates with ploader-install'
             'sbsigntools: for EFI binary signing with ploader-install'
             'sudo: for privilege elevation in ploader-install')
-source=("git+$url.git#commit=$_commit"
+# No #commit= pin on purpose: this always builds whatever is currently on
+# the default branch on GitHub. Bump pkgver/pkgrel by hand when you want a
+# new build to actually pick up the latest commit (makepkg source caching
+# won't re-clone otherwise).
+source=("git+$url.git"
         "ploader-install")
 sha256sums=('SKIP' 'SKIP')
 
@@ -49,8 +52,11 @@ package() {
 	# EFI filesystem drivers (btrfs, ext2/3/4, ntfs, xfs, ...) -- without
 	# these Ploader can only read the FAT32 ESP itself and finds no OS
 	# entries when /boot lives on a non-FAT root (e.g. Arch's default
-	# btrfs layout). See drivers_x64/README.md.
-	install -Dm644 drivers_x64/*.efi -t "$pkgdir/usr/share/$pkgname/drivers_x64/"
+	# btrfs layout). Source dir is "efifs-drivers", not "drivers_x64":
+	# `make clean` does `rm -rf drivers_x64/*`, which would wipe checked-in
+	# binaries living there. ploader-install still expects them installed
+	# under drivers_x64/ at runtime, so that's the destination name here.
+	install -Dm644 efifs-drivers/*.efi -t "$pkgdir/usr/share/$pkgname/drivers_x64/"
 
 	# install script (adapted from upstream refind-install)
 	install -Dm755 "$srcdir/ploader-install" "$pkgdir/usr/bin/ploader-install"
